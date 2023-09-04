@@ -24,4 +24,4 @@ RUN gradle installDist
 USER root
 RUN chmod 755 ./build/libs/demo-0.0.1-SNAPSHOT-plain.jar
 
-CMD ./build/install/app/bin/app
+CMD /build/install/app/bin/app
