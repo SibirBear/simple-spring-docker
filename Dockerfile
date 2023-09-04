@@ -1,22 +1,27 @@
-FROM eclipse-temurin:20-jdk
+#FROM eclipse-temurin:20-jdk
+#ARG GRADLE_VERSION=8.2
+#ENV GRADLE_HOME=/opt/gradle
+#WORKDIR .
+#COPY . .
+#RUN apt-get update && apt-get install -yq make unzip \
+#    && wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
+#    && unzip gradle-${GRADLE_VERSION}-bin.zip \
+#    && rm gradle-${GRADLE_VERSION}-bin.zip \
+#    && mv gradle-${GRADLE_VERSION} ${GRADLE_HOME}
+#ENV PATH=$PATH:$GRADLE_HOME/bin
+#RUN ./gradlew installDist
+#EXPOSE 8080
+#CMD ./build/install/demo/bin/demo
 
-ARG GRADLE_VERSION=8.2
-ENV GRADLE_HOME=/opt/gradle
+FROM gradle:8.3.0-jdk20
 
-WORKDIR .
+WORKDIR /
 
-COPY . .
+COPY / .
 
-RUN apt-get update && apt-get install -yq make unzip \
-    && wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
-    && unzip gradle-${GRADLE_VERSION}-bin.zip \
-    && rm gradle-${GRADLE_VERSION}-bin.zip \
-    && mv gradle-${GRADLE_VERSION} ${GRADLE_HOME}
+RUN gradle installDist
 
-ENV PATH=$PATH:$GRADLE_HOME/bin
+USER root
+RUN chmod 755 ./build/libs/demo-0.0.1-SNAPSHOT-plain.jar
 
-RUN ./gradlew installDist
-
-EXPOSE 8080
-
-CMD ./build/install/demo/bin/demo
+CMD ./build/install/app/bin/app
